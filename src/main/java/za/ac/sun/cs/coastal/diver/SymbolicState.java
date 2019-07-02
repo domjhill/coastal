@@ -682,7 +682,7 @@ public final class SymbolicState extends State {
 //			frames.peek().push(expr);
 //		}
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -744,15 +744,16 @@ public final class SymbolicState extends State {
 	 */
 	private void pushConjunct(Expression expression, long min, long max, long cur) {
 		Expression conjunct;
-		if (cur < min) {
+		if ((cur < min) || (cur > max)) {
 			Expression lo = Operation.lt(expression, new IntegerConstant(min, 32));
 			Expression hi = Operation.gt(expression, new IntegerConstant(max, 32));
 			conjunct = Operation.or(lo, hi);
+			cur = max + 1;
 		} else {
 			conjunct = Operation.eq(expression, new IntegerConstant(cur, 32));
 		}
 		Branch branch = new SegmentedPC.Nary(expression, min, max, pendingExtraCondition);
-		path = new Path(path, new Choice(branch, cur));
+		path = new Path(path, new Choice(branch, cur - min));
 		pendingExtraCondition = null;
 		log.trace(">>> adding (switch) conjunct: {}", conjunct.toString());
 		log.trace(">>> path is now: {}", path.getPathCondition().toString());
@@ -780,17 +781,10 @@ public final class SymbolicState extends State {
 	// ROUTINES TO CREATE NEW SYMBOLIC VARIABLES DURING EXECUTION
 	// ----------------------------------------------------------------------
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see za.ac.sun.cs.coastal.symbolic.State#createSymbolicBoolean(boolean, int)
-	 */
-	@Override
-	public boolean createSymbolicBoolean(boolean currentValue, int uniqueId) {
+	public boolean createSymbolicBoolean(boolean currentValue, String name) {
 		if (!getTrackingMode()) {
 			return false;
 		}
-		String name = CREATE_VAR_PREFIX + uniqueId;
 		pop();
 		push(new IntegerVariable(name, 32, 0, 1), 32);
 		Long concreteVal = (input == null) ? null : (Long) input.get(name);
@@ -806,17 +800,10 @@ public final class SymbolicState extends State {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see za.ac.sun.cs.coastal.symbolic.State#createSymbolicByte(byte, int)
-	 */
-	@Override
-	public byte createSymbolicByte(byte currentValue, int uniqueId) {
+	public byte createSymbolicByte(byte currentValue, String name) {
 		if (!getTrackingMode()) {
 			return 0;
 		}
-		String name = CREATE_VAR_PREFIX + uniqueId;
 		pop();
 		push(new IntegerVariable(name, 8, Byte.MIN_VALUE, Byte.MAX_VALUE), 8);
 		Long concreteVal = (input == null) ? null : (Long) input.get(name);
@@ -832,17 +819,10 @@ public final class SymbolicState extends State {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see za.ac.sun.cs.coastal.symbolic.State#createSymbolicShort(short, int)
-	 */
-	@Override
-	public short createSymbolicShort(short currentValue, int uniqueId) {
+	public short createSymbolicShort(short currentValue, String name) {
 		if (!getTrackingMode()) {
 			return 0;
 		}
-		String name = CREATE_VAR_PREFIX + uniqueId;
 		pop();
 		push(new IntegerVariable(name, 16, Short.MIN_VALUE, Short.MAX_VALUE), 16);
 		Long concreteVal = (input == null) ? null : (Long) input.get(name);
@@ -858,17 +838,10 @@ public final class SymbolicState extends State {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see za.ac.sun.cs.coastal.symbolic.State#createSymbolicChar(char, int)
-	 */
-	@Override
-	public char createSymbolicChar(char currentValue, int uniqueId) {
+	public char createSymbolicChar(char currentValue, String name) {
 		if (!getTrackingMode()) {
 			return 0x00;
 		}
-		String name = CREATE_VAR_PREFIX + uniqueId;
 		pop();
 		push(new IntegerVariable(name, 16, Character.MIN_VALUE, Character.MAX_VALUE), 16);
 		Long concreteVal = (input == null) ? null : (Long) input.get(name);
@@ -884,17 +857,10 @@ public final class SymbolicState extends State {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see za.ac.sun.cs.coastal.symbolic.State#createSymbolicInt(int, int)
-	 */
-	@Override
-	public int createSymbolicInt(int currentValue, int uniqueId) {
+	public int createSymbolicInt(int currentValue, String name) {
 		if (!getTrackingMode()) {
 			return 0;
 		}
-		String name = CREATE_VAR_PREFIX + uniqueId;
 		pop();
 		push(new IntegerVariable(name, 32, Integer.MIN_VALUE, Integer.MAX_VALUE), 32);
 		Long concreteVal = (input == null) ? null : (Long) input.get(name);
@@ -910,17 +876,10 @@ public final class SymbolicState extends State {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see za.ac.sun.cs.coastal.symbolic.State#createSymbolicLong(long, int)
-	 */
-	@Override
-	public long createSymbolicLong(long currentValue, int uniqueId) {
+	public long createSymbolicLong(long currentValue, String name) {
 		if (!getTrackingMode()) {
 			return 0;
 		}
-		String name = CREATE_VAR_PREFIX + uniqueId;
 		pop();
 		push(new IntegerVariable(name, 64, Long.MIN_VALUE, Long.MAX_VALUE), 64);
 		Long concreteVal = (input == null) ? null : (Long) input.get(name);
@@ -936,17 +895,10 @@ public final class SymbolicState extends State {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see za.ac.sun.cs.coastal.symbolic.State#createSymbolicFloat(float, int)
-	 */
-	@Override
-	public float createSymbolicFloat(float currentValue, int uniqueId) {
+	public float createSymbolicFloat(float currentValue, String name) {
 		if (!getTrackingMode()) {
 			return 0;
 		}
-		String name = CREATE_VAR_PREFIX + uniqueId;
 		pop();
 		push(new RealVariable(name, 32, Float.MIN_VALUE, Float.MAX_VALUE), 32);
 		Double concreteVal = (input == null) ? null : (Double) input.get(name);
@@ -962,17 +914,10 @@ public final class SymbolicState extends State {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see za.ac.sun.cs.coastal.symbolic.State#createSymbolicDouble(double, int)
-	 */
-	@Override
-	public double createSymbolicDouble(double currentValue, int uniqueId) {
+	public double createSymbolicDouble(double currentValue, String name) {
 		if (!getTrackingMode()) {
 			return 0;
 		}
-		String name = CREATE_VAR_PREFIX + uniqueId;
 		pop();
 		push(new RealVariable(name, 64, Double.MIN_VALUE, Double.MAX_VALUE), 64);
 		Double concreteVal = (input == null) ? null : (Double) input.get(name);
@@ -986,6 +931,126 @@ public final class SymbolicState extends State {
 			log.trace(">>> create symbolic var {}, default value of {}", name, newValue);
 			return newValue;
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see za.ac.sun.cs.coastal.symbolic.State#createSymbolicBoolean(boolean, int)
+	 */
+	@Override
+	public boolean createSymbolicBoolean(boolean currentValue, int uniqueId) {
+		return createSymbolicBoolean(currentValue, CREATE_VAR_PREFIX + uniqueId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see za.ac.sun.cs.coastal.symbolic.State#createSymbolicByte(byte, int)
+	 */
+	@Override
+	public byte createSymbolicByte(byte currentValue, int uniqueId) {
+		return createSymbolicByte(currentValue, CREATE_VAR_PREFIX + uniqueId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see za.ac.sun.cs.coastal.symbolic.State#createSymbolicShort(short, int)
+	 */
+	@Override
+	public short createSymbolicShort(short currentValue, int uniqueId) {
+		return createSymbolicShort(currentValue, CREATE_VAR_PREFIX + uniqueId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see za.ac.sun.cs.coastal.symbolic.State#createSymbolicChar(char, int)
+	 */
+	@Override
+	public char createSymbolicChar(char currentValue, int uniqueId) {
+		return createSymbolicChar(currentValue, CREATE_VAR_PREFIX + uniqueId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see za.ac.sun.cs.coastal.symbolic.State#createSymbolicInt(int, int)
+	 */
+	@Override
+	public int createSymbolicInt(int currentValue, int uniqueId) {
+		return createSymbolicInt(currentValue, CREATE_VAR_PREFIX + uniqueId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see za.ac.sun.cs.coastal.symbolic.State#createSymbolicLong(long, int)
+	 */
+	@Override
+	public long createSymbolicLong(long currentValue, int uniqueId) {
+		return createSymbolicLong(currentValue, CREATE_VAR_PREFIX + uniqueId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see za.ac.sun.cs.coastal.symbolic.State#createSymbolicFloat(float, int)
+	 */
+	@Override
+	public float createSymbolicFloat(float currentValue, int uniqueId) {
+		return createSymbolicFloat(currentValue, CREATE_VAR_PREFIX + uniqueId);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see za.ac.sun.cs.coastal.symbolic.State#createSymbolicDouble(double, int)
+	 */
+	@Override
+	public double createSymbolicDouble(double currentValue, int uniqueId) {
+		return createSymbolicDouble(currentValue, CREATE_VAR_PREFIX + uniqueId);
+	}
+
+	@Override
+	public boolean makeSymbolicBoolean(String newName) {
+		return createSymbolicBoolean(false, newName);
+	}
+
+	@Override
+	public int makeSymbolicInt(String newName) {
+		return createSymbolicInt(0, newName);
+	}
+
+	@Override
+	public short makeSymbolicShort(String newName) {
+		return createSymbolicShort((short) 0, newName);
+	}
+
+	@Override
+	public byte makeSymbolicByte(String newName) {
+		return createSymbolicByte((byte) 0, newName);
+	}
+
+	@Override
+	public char makeSymbolicChar(String newName) {
+		return createSymbolicChar('\0', newName);
+	}
+
+	@Override
+	public long makeSymbolicLong(String newName) {
+		return createSymbolicLong(0L, newName);
+	}
+
+	@Override
+	public float makeSymbolicFloat(String newName) {
+		return createSymbolicFloat(0F, newName);
+	}
+
+	@Override
+	public double makeSymbolicDouble(String newName) {
+		return createSymbolicDouble(0.0, newName);
 	}
 
 	// ======================================================================
@@ -1465,24 +1530,59 @@ public final class SymbolicState extends State {
 	 * int, java.lang.String[])
 	 */
 	@Override
-	public String[] getConcreteStringArray(int triggerIndex, int index, int address, String[] currentValue) {
-		throw new RuntimeException("UNIMPLEMENTED METHOD");
+	public String[] getConcreteStringArray(int triggerIndex, int index, int address, String[] currentArray) {
+		Trigger trigger = coastal.getTrigger(triggerIndex);
+		String name = trigger.getParamName(index);
+		int length = (currentArray == null) ? 0 : currentArray.length;
+		int arrayId = createArray();
+		setArrayLength(arrayId, length);
+		if (name == null) { // not symbolic
+			for (int i = 0; i < length; i++) {
+				int stringLength = currentArray[i].length();
+				int stringId = createString();
+				for (int j = 0; j < stringLength; j++) {
+					IntegerConstant chValue = new IntegerConstant(currentArray[i].charAt(j), 16);
+					setStringChar(stringId, i, chValue);
+				}
+				setArrayValue(arrayId, i, new IntegerConstant(stringId, 32));
+			}
+			setLocal(index, new IntegerConstant(arrayId, 32));
+			input.put(index, currentArray);
+			return currentArray;
+		} else {
+			throw new RuntimeException("UNIMPLEMENTED METHOD");
+//			char minChar = (Character) coastal.getDefaultMinValue(char.class);
+//			char maxChar = (Character) coastal.getDefaultMaxValue(char.class);
+//			String[] newArray = new String[length];
+//			for (int i = 0; i < length; i++) {
+//				String entryName = name + INDEX_SEPARATOR + i;
+//				/*???*/ Object concrete = ((name == null) || (input == null)) ? null : input.get(entryName);
+//				char[] chars = new char[length];
+//			}
+//			setLocal(index, new IntegerConstant(arrayId, 32));
+//			input.put(index, newArray);
+//			return newArray;
+		}
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see za.ac.sun.cs.coastal.symbolic.State#triggerMethod(int, int)
+	 * @see za.ac.sun.cs.coastal.symbolic.State#triggerMethod(int, int, boolean)
 	 */
 	@Override
-	public void triggerMethod(int methodNumber, int triggerIndex) {
+	public void triggerMethod(int methodNumber, int triggerIndex, boolean isStatic) {
 		if (!getRecordingMode()) {
 			setRecordingMode(mayRecord);
 			if (getRecordingMode()) {
 				log.trace(">>> symbolic record mode switched on");
 				mayRecord = false;
 				setTrackingMode(true);
+				Expression thisValue = isStatic ? null : peek();
 				frames.push(new SymbolicFrame(methodNumber, lastInvokingInstruction));
+				if (!isStatic) {
+					setLocal(0, thisValue);
+				}
 				dumpFrames();
 				triggeringIndex = triggerIndex;
 			}
@@ -2511,7 +2611,7 @@ public final class SymbolicState extends State {
 			return;
 		}
 		if (getRecordingMode()) {
-			log.trace("CASE FOR {}", Bytecodes.toString(Opcodes.TABLESWITCH));
+			log.trace("CASE {} FOR TABLESWITCH ({} .. {})", value, min, max);
 			checkLimitConjuncts();
 			if (!pendingSwitch.isEmpty()) {
 				pushConjunct(pendingSwitch.pop(), min, max, value);

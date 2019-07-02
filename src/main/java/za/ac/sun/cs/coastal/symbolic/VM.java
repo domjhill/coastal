@@ -73,6 +73,38 @@ public class VM {
 		return state.createSymbolicDouble(oldValue, uniqueId);
 	}
 
+	public static int makeSymbolicInt(String newName) {
+		return state.makeSymbolicInt(newName);
+	}
+	
+	public static short makeSymbolicShort(String newName) {
+		return state.makeSymbolicShort(newName);
+	}
+	
+	public static boolean makeSymbolicBoolean(String newName) {
+		return state.makeSymbolicBoolean(newName);
+	}
+	
+	public static byte makeSymbolicByte(String newName) {
+		return state.makeSymbolicByte(newName);
+	}
+	
+	public static char makeSymbolicChar(String newName) {
+		return state.makeSymbolicChar(newName);
+	}
+	
+	public static long makeSymbolicLong(String newName) {
+		return state.makeSymbolicLong(newName);
+	}
+	
+	public static float makeSymbolicFloat(String newName) {
+		return state.makeSymbolicFloat(newName);
+	}
+	
+	public static double makeSymbolicDouble(String newName) {
+		return state.makeSymbolicDouble(newName);
+	}
+	
 	// ======================================================================
 	//
 	// METHOD ROUTINES
@@ -155,8 +187,8 @@ public class VM {
 		return state.getConcreteStringArray(triggerIndex, index, address, currentValue);
 	}
 
-	public static void triggerMethod(int methodNumber, int triggerIndex) {
-		state.triggerMethod(methodNumber, triggerIndex);
+	public static void triggerMethod(int methodNumber, int triggerIndex, boolean isStatic) {
+		state.triggerMethod(methodNumber, triggerIndex, isStatic);
 	}
 
 	public static void startMethod(int methodNumber, int argCount) {

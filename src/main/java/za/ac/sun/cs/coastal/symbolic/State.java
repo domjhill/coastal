@@ -281,6 +281,22 @@ public abstract class State {
 	 */
 	public abstract double createSymbolicDouble(double currentValue, int uniqueId);
 
+	public abstract int makeSymbolicInt(String newName);
+	
+	public abstract short makeSymbolicShort(String newName);
+	
+	public abstract boolean makeSymbolicBoolean(String newName);
+	
+	public abstract byte makeSymbolicByte(String newName);
+	
+	public abstract char makeSymbolicChar(String newName);
+	
+	public abstract long makeSymbolicLong(String newName);
+	
+	public abstract float makeSymbolicFloat(String newName);
+	
+	public abstract double makeSymbolicDouble(String newName);
+	
 	// ======================================================================
 	//
 	// METHOD ROUTINES
@@ -520,8 +536,9 @@ public abstract class State {
 	 * 
 	 * @param methodNumber unique number of the method
 	 * @param triggerIndex index of the matching trigger
+	 * @param isStatic whether or not the triggered method is static
 	 */
-	public abstract void triggerMethod(int methodNumber, int triggerIndex);
+	public abstract void triggerMethod(int methodNumber, int triggerIndex, boolean isStatic);
 
 	/**
 	 * Handle the invocation of a non-triggering method. Tracking may or may not be

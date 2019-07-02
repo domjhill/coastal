@@ -3,15 +3,17 @@
 <configuration>
 	<coastal>
 		<target>
-			<main>examples.bintree.BinTree2</main>
+			<main>examples.bintree.BinTree</main>
 			<instrument>examples.bintree</instrument>
-			<trigger>examples.bintree.BinTree2.runExplicit2(o1: int, o2: int, v1: int, v2: int)</trigger>
+			<trigger>examples.bintree.BinTree.runTestDriver(int)</trigger>
 		</target>
 		<bounds>
-			<bound name="o1" min="0" max="1"/>
-			<bound name="o2" min="0" max="1"/>
-			<bound name="v1" min="0" max="9"/>
-			<bound name="v2" min="0" max="9"/>
+			<bound name="int" min="-9" max="9"/>
+			<bound name="c0" min="0" max="1"/>
+			<bound name="c1" min="0" max="1"/>
+			<bound name="c2" min="0" max="1"/>
+			<bound name="c3" min="0" max="1"/>
+			<bound name="c4" min="0" max="1"/>
 		</bounds>
 		<settings>
 			<echo-output>true</echo-output>
