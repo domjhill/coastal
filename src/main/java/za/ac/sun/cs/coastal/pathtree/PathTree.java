@@ -1,6 +1,8 @@
 package za.ac.sun.cs.coastal.pathtree;
 
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -194,6 +196,15 @@ public class PathTree implements Comparator<PathTreeNode> {
 				if (root == null) {
 					log.trace("::: creating root");
 					root = PathTreeNode.createRoot(paths[0]);
+					
+					// Publish root creation if required.
+					if (drawPaths) {
+						Map<String, Object> map = new HashMap<String, Object>();
+						map.put("root", "root");
+						map.put("condition", root.getBranch().toString());
+						
+						broker.publish("coastal-visual", map);
+					}
 				}
 			} finally {
 				lock.writeLock().unlock();
@@ -251,16 +262,62 @@ public class PathTree implements Comparator<PathTreeNode> {
 			visitedNodes[j] = n;
 			alt = paths[j].getChoice().getAlternative();
 		}
+		
+		// Publish path if required
+		if (drawPaths) {
+			for (int k = 0; k < visitedNodes.length - 1; k++) {
+				PathTreeNode parentNode = visitedNodes[k];
+				PathTreeNode childNode = visitedNodes[k + 1];
+				
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("currentNode", getId(childNode));
+				map.put("parentNode", getId(parentNode));
+				map.put("currentDepth", k + 1);
+				
+				if (parentNode.getChild(0) != null && parentNode.getChild(0) == childNode) {
+					map.put("currentOutcome", 0);
+				} else if (parentNode.getChild(1) != null && parentNode.getChild(1) == childNode) {
+					map.put("currentOutcome", 1);
+				}
+				
+				// Add path condition
+				map.put("currentCondition", childNode.getBranch().toString());
+				
+				broker.publish("coastal-visual", map);
+			}
+		}
+		
 		// At this point:
 		// parent == node{i_d-1}, j == depth, i == i_d-1 == path[j-1].getOutcomeIndex()
 		PathTreeNode n = parent.getChild(alt);
 		if (n == null) {
 			parent.lock();
 			if (parent.getChild(alt) == null) {
+				 // Node information for infeasible or leaf nodes will be published if required.
+				Map<String, Object> map = new HashMap<String, Object>();
+				
 				if (isInfeasible) {
 					n = parent.createInfeasible(alt, execution);
+	
+					if (drawPaths) {
+						map.put("infeasible", true);
+					}
 				} else {
 					n = parent.createLeaf(alt, execution);
+
+					if (drawPaths) {
+						map.put("leaf", true);
+					}
+				}
+				
+				// Publish node information if required
+				if (drawPaths) {
+					map.put("currentNode", n.getId());
+					map.put("currentDepth", depth);
+					map.put("currentOutcome", alt);
+					map.put("parentNode", getId(parent));
+					
+					broker.publish("coastal-visual", map);
 				}
 			}
 			parent.unlock();
