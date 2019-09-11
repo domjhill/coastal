@@ -3,9 +3,9 @@
 <configuration>
 	<coastal>
 		<target>
-			<main>tests.visualization.Test3</main>
+			<main>tests.visualization.BasicTest1</main>
 			<instrument>tests.visualization</instrument>
-			<trigger>tests.visualization.Test3.test(X: int)</trigger>
+			<trigger>tests.visualization.BasicTest1.test(X: int)</trigger>
 		</target>
 		
 		<settings>

@@ -3,9 +3,9 @@
 <configuration>
 	<coastal>
 		<target>
-			<main>tests.visualization.Test1</main>
+			<main>tests.visualization.SwitchTest1</main>
 			<instrument>tests.visualization</instrument>
-			<trigger>tests.visualization.Test1.test(X: int)</trigger>
+			<trigger>tests.visualization.SwitchTest1.test(X: int, Y: int, Z: int)</trigger>
 		</target>
 		
 		<settings>

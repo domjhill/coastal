@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE configuration PUBLIC "-//DEEPSEA//COASTAL configuration//EN" "https://deepseaplatform.github.io/coastal/coastal.dtd">
+<configuration>
+	<coastal>
+		<target>
+			<main>tests.visualization.BasicTest4</main>
+			<instrument>tests.visualization</instrument>
+			<trigger>tests.visualization.BasicTest4.test(X: int, Y: int)</trigger>
+		</target>
+		
+		<settings>
+			<echo-output>false</echo-output>
+			<draw-paths>true</draw-paths>
+		</settings>
+		<strategies>
+			<strategy>za.ac.sun.cs.coastal.strategy.pathbased.DepthFirstFactory</strategy>
+		</strategies>
+		<observers>
+			<observer>ceo.GUIFactoryFX</observer>
+		</observers>
+		
+		
+	</coastal>
+</configuration>
+

@@ -1,6 +1,6 @@
 package tests.visualization;
 
-public class Test3 {
+public class BasicTest1 {
 	public static void main(String[] args) {
 		try {
 			Thread.sleep(300);
@@ -8,23 +8,23 @@ public class Test3 {
 			e.printStackTrace();
 		}
 		
-		int x = 10;
+		int x = 5;
 		test(x);
 	}
 	
 	private static void test(int x) {
-		if (x <= 5) {
-			System.out.println("x <= 5");
+		if (x == 5) {
+			System.out.println("x == 5");
 		} else {
-			if (x <= 2) {
-				System.out.println("x <= 2");
+			if (x < 2) {
+				System.out.println("x < 2");
 			}
 			
-			if (x >= 3) {
-				System.out.println("x >= 3");
-			} else if (x != 2) {
-				System.out.println("x != 3");
+			if (x > 3) {
+				System.out.println("x > 3");
 			}
+			
+			System.out.println("x != 5");
 		}
 	}
 }
