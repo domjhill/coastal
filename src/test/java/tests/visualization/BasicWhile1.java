@@ -1,31 +1,27 @@
 package tests.visualization;
 
-public class BasicTest1 {
+public class BasicWhile1 {
 	public static void main(String[] args) {
 		try {
 			Thread.sleep(300);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
 		int x = 5;
 		test(x);
 	}
-
+	
 	private static void test(int x) {
-		int c = 0;
-		if (x == 5) {
-			c = 1;
-		} else {
-			if (x < 2) {
-				c = 2;
-			}
-
-			if (x > 3) {
-				c = 3;
+		int y = 0;
+		int z = 4; // Stopping number
+		
+		while (y <= x) {
+			y++;
+			
+			if (y == z) {
+				return;
 			}
 		}
-		
-		System.out.println(c);
 	}
 }

@@ -7,24 +7,27 @@ public class BasicTest2 {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		int x = 5;
 		test(x);
 	}
-	
+
 	private static void test(int x) {
+		int c = 0;
 		if (x != 5) {
-			System.out.println("x 1= 5");
+			c = 1;
 		} else {
 			if (x >= 2) {
-				System.out.println("x >= 2");
+				c = 2;
 			} else {
-				System.out.println("x !>= 2");
+				c = 3;
 			}
-			
+
 			if (x > 3) {
-				System.out.println("x > 3");
+				c = 4;
 			}
 		}
+		
+		System.out.println(c);
 	}
 }
