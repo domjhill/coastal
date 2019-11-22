@@ -12,7 +12,7 @@ public class BasicTest1 {
 		test(x);
 	}
 
-	private static void test(int x) {
+	private static void test1(int x) {
 		int c = 0;
 		if (x == 5) {
 			c = 1;
@@ -24,6 +24,23 @@ public class BasicTest1 {
 			if (x > 3) {
 				c = 3;
 			}
+		}
+		
+		System.out.println(c);
+	}
+	
+	private static void test(int x) {
+		int c = 0;
+		if (x != 5) {
+			if (x < 2) {
+				c = 2;
+			}
+
+			if (x > 3) {
+				c = 3;
+			}
+		} else {
+			c = 1;
 		}
 		
 		System.out.println(c);
